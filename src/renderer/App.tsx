@@ -377,8 +377,8 @@ export default function App() {
         ) : (
           <div className="empty-state">
             <h2>No entry selected</h2>
-            <p>Select an entry from the sidebar or create a new one</p>
-            <button onClick={handleNewEntry}>New Entry for Today</button>
+            <p>Select an entry from the sidebar or open today's journal</p>
+            <button onClick={handleNewEntry}>Open Today's Entry</button>
           </div>
         )}
       </main>

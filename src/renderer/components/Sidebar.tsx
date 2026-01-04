@@ -149,8 +149,8 @@ export default function Sidebar({
       <div className="sidebar-header">
         <h1>Journal</h1>
         <div className="sidebar-actions">
-          <button className="primary" onClick={onNewEntry}>
-            + New
+          <button className="primary" onClick={onNewEntry} title="Open or create today's entry">
+            Today
           </button>
           <button onClick={onOpenSettings} title="Settings">
             ⚙
