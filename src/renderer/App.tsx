@@ -27,6 +27,7 @@ export default function App() {
   const [aiLoading, setAILoading] = useState(false);
   const [lastAIAction, setLastAIAction] = useState<string | null>(null);
   const [showSettings, setShowSettings] = useState(false);
+  const [indexing, setIndexing] = useState(false);
 
   // Load settings on mount
   useEffect(() => {
@@ -40,8 +41,26 @@ export default function App() {
   useEffect(() => {
     if (settings?.journalPath) {
       refreshTree();
+      buildOrReadIndex();
     }
   }, [settings?.journalPath]);
+
+  // Build or read index
+  const buildOrReadIndex = useCallback(async () => {
+    try {
+      setIndexing(true);
+      const existingIndex = await window.journal.readIndex();
+
+      if (!existingIndex) {
+        // Build index if it doesn't exist
+        await window.journal.buildIndex();
+      }
+    } catch (error) {
+      console.error('Error initializing index:', error);
+    } finally {
+      setIndexing(false);
+    }
+  }, []);
 
   const refreshTree = useCallback(async () => {
     const treeData = await window.journal.getEntriesTree();
@@ -78,6 +97,13 @@ export default function App() {
     if (currentEntry) {
       await window.journal.saveEntry(currentEntry.path, content);
       setCurrentEntry({ ...currentEntry, content });
+
+      // Update index for this entry
+      try {
+        await window.journal.updateIndexItem(currentEntry.path, 'entry');
+      } catch (error) {
+        console.error('Error updating index:', error);
+      }
     }
   };
 
@@ -132,10 +158,49 @@ export default function App() {
   };
 
   const handleSaveAIOutput = async () => {
-    if (aiOutput) {
-      await window.journal.saveAIOutput(aiOutput.type, currentEntry?.date || '', aiOutput.content);
-      // Could show a toast notification here
+    if (aiOutput && currentEntry) {
+      await window.journal.saveAIOutput(aiOutput.type, currentEntry.date, aiOutput.content);
+
+      // Update index for AI output
+      try {
+        const subtypeMap: Record<string, 'daily' | 'weekly' | 'highlights' | 'loops' | 'questions'> = {
+          'daily-review': 'daily',
+          'weekly-summary': 'weekly',
+          'highlights': 'highlights',
+          'open-loops': 'loops',
+          'question': 'questions',
+        };
+        const subtype = subtypeMap[aiOutput.type];
+        if (subtype) {
+          // For AI outputs, the relativePath varies by type
+          let relativePath = '';
+          if (subtype === 'daily') {
+            relativePath = `${currentEntry.date}.review.md`;
+          } else if (subtype === 'weekly') {
+            const weekNum = getWeekNumber(new Date(currentEntry.date));
+            const year = currentEntry.date.split('-')[0];
+            relativePath = `${year}-W${weekNum.toString().padStart(2, '0')}.summary.md`;
+          } else if (subtype === 'highlights') {
+            relativePath = `${currentEntry.date}.highlights.md`;
+          } else if (subtype === 'loops') {
+            relativePath = 'open_loops.md';
+          } else if (subtype === 'questions') {
+            relativePath = `${currentEntry.date}.question.md`;
+          }
+
+          await window.journal.updateIndexItem(relativePath, 'ai', subtype);
+        }
+      } catch (error) {
+        console.error('Error updating index:', error);
+      }
     }
+  };
+
+  // Helper function to get week number
+  const getWeekNumber = (date: Date): number => {
+    const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
+    const pastDaysOfYear = (date.getTime() - firstDayOfYear.getTime()) / 86400000;
+    return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
   };
 
   const handleSaveSettings = async (newSettings: Settings) => {

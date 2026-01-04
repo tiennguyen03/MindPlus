@@ -51,4 +51,8 @@ export const IPC = {
   CREATE_ENTRY: 'create-entry',
   RUN_AI: 'run-ai',
   SAVE_AI_OUTPUT: 'save-ai-output',
+  BUILD_INDEX: 'build-index',
+  READ_INDEX: 'read-index',
+  UPDATE_INDEX_ITEM: 'update-index-item',
+  REMOVE_INDEX_ITEM: 'remove-index-item',
 } as const;

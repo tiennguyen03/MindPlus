@@ -10,6 +10,14 @@ import {
   generateOpenLoops,
   generateQuestion,
 } from './ai';
+import {
+  buildIndex,
+  readIndex,
+  writeIndex,
+  updateIndexItem,
+  removeIndexItem,
+} from '../services/indexing/indexBuilder';
+import type { JournalIndex } from '../services/indexing/indexTypes';
 
 let cachedSettings: Settings | null = null;
 
@@ -340,6 +348,37 @@ export function registerIpcHandlers(): void {
 
     await ensureDir(path.dirname(filePath));
     await fs.writeFile(filePath, content, 'utf-8');
+  });
+
+  // Index management handlers
+  ipcMain.handle(IPC.BUILD_INDEX, async () => {
+    const settings = await loadSettings();
+    if (!settings.journalPath) throw new Error('No journal folder selected');
+
+    const index = await buildIndex(settings.journalPath);
+    await writeIndex(settings.journalPath, index);
+    return index;
+  });
+
+  ipcMain.handle(IPC.READ_INDEX, async () => {
+    const settings = await loadSettings();
+    if (!settings.journalPath) return null;
+
+    return await readIndex(settings.journalPath);
+  });
+
+  ipcMain.handle(IPC.UPDATE_INDEX_ITEM, async (_, relativePath: string, type: 'entry' | 'ai', subtype?: 'daily' | 'weekly' | 'highlights' | 'loops' | 'questions') => {
+    const settings = await loadSettings();
+    if (!settings.journalPath) throw new Error('No journal folder selected');
+
+    await updateIndexItem(settings.journalPath, relativePath, type, subtype);
+  });
+
+  ipcMain.handle(IPC.REMOVE_INDEX_ITEM, async (_, relativePath: string) => {
+    const settings = await loadSettings();
+    if (!settings.journalPath) throw new Error('No journal folder selected');
+
+    await removeIndexItem(settings.journalPath, relativePath);
   });
 }
 

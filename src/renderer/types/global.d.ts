@@ -8,6 +8,25 @@ interface AIOutput {
   quotes?: string[];
 }
 
+interface IndexItem {
+  id: string;
+  type: 'entry' | 'ai';
+  subtype?: 'daily' | 'weekly' | 'highlights' | 'loops' | 'questions';
+  relativePath: string;
+  displayTitle: string;
+  date: string;
+  updatedAt: string;
+  wordCount?: number;
+  excerpt?: string;
+  searchableText?: string;
+}
+
+interface JournalIndex {
+  version: number;
+  lastBuilt: string;
+  items: IndexItem[];
+}
+
 interface JournalAPI {
   selectFolder: () => Promise<string | null>;
   getSettings: () => Promise<Settings>;
@@ -19,6 +38,10 @@ interface JournalAPI {
   createEntry: (date: string) => Promise<string>;
   runAI: (action: string, date: string) => Promise<AIOutput>;
   saveAIOutput: (type: string, date: string, content: string) => Promise<void>;
+  buildIndex: () => Promise<JournalIndex>;
+  readIndex: () => Promise<JournalIndex | null>;
+  updateIndexItem: (relativePath: string, type: 'entry' | 'ai', subtype?: 'daily' | 'weekly' | 'highlights' | 'loops' | 'questions') => Promise<void>;
+  removeIndexItem: (relativePath: string) => Promise<void>;
 }
 
 declare global {

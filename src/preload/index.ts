@@ -12,6 +12,10 @@ const IPC = {
   CREATE_ENTRY: 'create-entry',
   RUN_AI: 'run-ai',
   SAVE_AI_OUTPUT: 'save-ai-output',
+  BUILD_INDEX: 'build-index',
+  READ_INDEX: 'read-index',
+  UPDATE_INDEX_ITEM: 'update-index-item',
+  REMOVE_INDEX_ITEM: 'remove-index-item',
 } as const;
 
 // Types for the API
@@ -41,6 +45,25 @@ export interface AIOutput {
   content: string;
   confidence?: string;
   quotes?: string[];
+}
+
+export interface IndexItem {
+  id: string;
+  type: 'entry' | 'ai';
+  subtype?: 'daily' | 'weekly' | 'highlights' | 'loops' | 'questions';
+  relativePath: string;
+  displayTitle: string;
+  date: string;
+  updatedAt: string;
+  wordCount?: number;
+  excerpt?: string;
+  searchableText?: string;
+}
+
+export interface JournalIndex {
+  version: number;
+  lastBuilt: string;
+  items: IndexItem[];
 }
 
 const api = {
@@ -73,6 +96,18 @@ const api = {
 
   saveAIOutput: (type: string, date: string, content: string): Promise<void> =>
     ipcRenderer.invoke(IPC.SAVE_AI_OUTPUT, type, date, content),
+
+  buildIndex: (): Promise<JournalIndex> =>
+    ipcRenderer.invoke(IPC.BUILD_INDEX),
+
+  readIndex: (): Promise<JournalIndex | null> =>
+    ipcRenderer.invoke(IPC.READ_INDEX),
+
+  updateIndexItem: (relativePath: string, type: 'entry' | 'ai', subtype?: 'daily' | 'weekly' | 'highlights' | 'loops' | 'questions'): Promise<void> =>
+    ipcRenderer.invoke(IPC.UPDATE_INDEX_ITEM, relativePath, type, subtype),
+
+  removeIndexItem: (relativePath: string): Promise<void> =>
+    ipcRenderer.invoke(IPC.REMOVE_INDEX_ITEM, relativePath),
 };
 
 contextBridge.exposeInMainWorld('journal', api);
