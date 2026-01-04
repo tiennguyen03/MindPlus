@@ -332,8 +332,10 @@ export default function App() {
           searchResults={searchResults}
           selectedPath={currentEntry?.path || null}
           aiEnabled={settings.aiEnabled}
+          index={index}
           onSearch={handleSearch}
           onSelectEntry={handleSelectEntry}
+          onSelectIndexItem={handleQuickSwitcherSelect}
           onNewEntry={handleNewEntry}
           onSelectFolder={handleSelectFolder}
           onToggleAI={handleToggleAI}

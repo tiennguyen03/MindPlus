@@ -1,6 +1,20 @@
 import React, { useState, useMemo } from 'react';
 import { TreeNode, JournalEntry } from '../../shared/types';
 import { format, parse } from 'date-fns';
+import EnhancedSearch from './EnhancedSearch';
+
+interface IndexItem {
+  id: string;
+  type: 'entry' | 'ai';
+  subtype?: 'daily' | 'weekly' | 'highlights' | 'loops' | 'questions';
+  relativePath: string;
+  displayTitle: string;
+  date: string;
+  updatedAt: string;
+  wordCount?: number;
+  excerpt?: string;
+  searchableText?: string;
+}
 
 interface SidebarProps {
   tree: TreeNode | null;
@@ -8,8 +22,10 @@ interface SidebarProps {
   searchResults: JournalEntry[];
   selectedPath: string | null;
   aiEnabled: boolean;
+  index: IndexItem[];
   onSearch: (query: string) => void;
   onSelectEntry: (path: string) => void;
+  onSelectIndexItem: (item: IndexItem) => void;
   onNewEntry: () => void;
   onSelectFolder: () => void;
   onToggleAI: () => void;
@@ -88,8 +104,10 @@ export default function Sidebar({
   searchResults,
   selectedPath,
   aiEnabled,
+  index,
   onSearch,
   onSelectEntry,
+  onSelectIndexItem,
   onNewEntry,
   onSelectFolder,
   onToggleAI,
@@ -151,24 +169,11 @@ export default function Sidebar({
 
       <div className="sections-container">
         {isSearching ? (
-          <div className="search-results">
-            {searchResults.length === 0 ? (
-              <div className="empty-message">No results found</div>
-            ) : (
-              searchResults.map((result, index) => (
-                <div
-                  key={`${result.path}-${index}`}
-                  className="entry-item"
-                  onClick={() => onSelectEntry(result.path)}
-                >
-                  <span className="entry-date">{result.date}</span>
-                  <span className="entry-preview">
-                    {result.content.slice(0, 60)}...
-                  </span>
-                </div>
-              ))
-            )}
-          </div>
+          <EnhancedSearch
+            query={searchQuery}
+            index={index}
+            onSelectItem={onSelectIndexItem}
+          />
         ) : sections.length > 0 ? (
           sections.map(section => (
             <div key={section.key} className="section">
