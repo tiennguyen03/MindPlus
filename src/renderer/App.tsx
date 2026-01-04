@@ -160,6 +160,8 @@ export default function App() {
           onClose={() => setShowSettings(false)}
         />
       )}
+
+      {/* Sidebar - Left Panel */}
       <ResizablePanel
         direction="horizontal"
         defaultSize={300}
@@ -183,31 +185,14 @@ export default function App() {
           hasApiKey={!!settings.aiApiKey}
         />
       </ResizablePanel>
+
+      {/* Editor - Center Panel */}
       <main className="main-content">
         {currentEntry ? (
-          <>
-            <Editor
-              entry={currentEntry}
-              onSave={handleSaveEntry}
-            />
-            {(aiLoading || aiOutput) && (
-              <ResizablePanel
-                direction="vertical"
-                defaultSize={300}
-                minSize={150}
-                maxSize={600}
-                className="ai-panel"
-              >
-                <AIOutputPanel
-                  loading={aiLoading}
-                  output={aiOutput}
-                  onClose={handleCloseAIOutput}
-                  onSave={handleSaveAIOutput}
-                  onRefresh={handleRefreshAI}
-                />
-              </ResizablePanel>
-            )}
-          </>
+          <Editor
+            entry={currentEntry}
+            onSave={handleSaveEntry}
+          />
         ) : (
           <div className="empty-state">
             <h2>No entry selected</h2>
@@ -216,6 +201,25 @@ export default function App() {
           </div>
         )}
       </main>
+
+      {/* AI Panel - Right Panel (conditional) */}
+      {(aiLoading || aiOutput) && (
+        <ResizablePanel
+          direction="horizontal"
+          defaultSize={420}
+          minSize={300}
+          maxSize={720}
+          className="ai-panel-right"
+        >
+          <AIOutputPanel
+            loading={aiLoading}
+            output={aiOutput}
+            onClose={handleCloseAIOutput}
+            onSave={handleSaveAIOutput}
+            onRefresh={handleRefreshAI}
+          />
+        </ResizablePanel>
+      )}
     </div>
   );
 }
