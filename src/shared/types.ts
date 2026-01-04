@@ -15,14 +15,20 @@ export interface TreeNode {
 export interface Settings {
   journalPath: string | null;
   aiEnabled: boolean;
-  theme: 'light' | 'dark' | 'system';
+  theme: 'light' | 'dark' | 'system'; // Legacy - keep for backward compatibility
+  uiTheme: 'default' | 'soft-dark' | 'calm-light' | 'system';
   aiApiKey?: string;
+  sidebarWidth: number;
+  aiPanelWidth: number;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
   journalPath: null,
   aiEnabled: false,
   theme: 'system',
+  uiTheme: 'system',
+  sidebarWidth: 300,
+  aiPanelWidth: 420,
 };
 
 export interface AIOutput {
