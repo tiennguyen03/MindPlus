@@ -114,13 +114,17 @@ export default function App() {
   const handleNewEntry = async () => {
     try {
       const today = new Date().toISOString().split('T')[0];
+      console.log('[handleNewEntry] Creating/opening entry for date:', today);
+
       const entryPath = await window.journal.createEntry(today);
+      console.log('[handleNewEntry] Entry path:', entryPath);
 
       // Refresh tree and index
       await refreshTree();
 
       // Read the entry
       const entry = await window.journal.readEntry(entryPath);
+      console.log('[handleNewEntry] Entry loaded:', entry?.date, 'Path:', entry?.path);
 
       if (entry) {
         setCurrentEntry(entry);
