@@ -1,0 +1,171 @@
+/* ============================================
+   MindPlus Theme System
+   ============================================ */
+
+/* Global Spacing & Typography Tokens */
+:root {
+  /* Spacing Scale */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* Typography */
+  --font-base: 16px;
+  --font-small: 14px;
+  --font-tiny: 12px;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.65;
+
+  /* Font Families */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  --font-mono: 'SF Mono', 'Monaco', 'Menlo', 'Consolas', 'Liberation Mono', monospace;
+
+  /* Focus & Transitions */
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.2s ease;
+
+  /* Layout (legacy) */
+  --sidebar-width: 300px;
+}
+
+/* ============================================
+   THEME: Default (Light)
+   High contrast, bright, clean
+   ============================================ */
+.theme-default {
+  /* Backgrounds */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-tertiary: #e9ecef;
+  --bg-hover: #f1f3f4;
+
+  /* Text */
+  --text-primary: #1a1a1a;
+  --text-secondary: #5f6368;
+  --text-muted: #9aa0a6;
+
+  /* Borders */
+  --border-color: #e0e0e0;
+  --border-color-subtle: #f0f0f0;
+
+  /* Accents */
+  --accent-color: #1a73e8;
+  --accent-light: #e8f0fe;
+  --accent-dark: #1557b0;
+
+  /* Status Colors */
+  --success-color: #34a853;
+  --warning-color: #fbbc04;
+  --error-color: #ea4335;
+
+  /* Interactive States */
+  --focus-ring: #1a73e8;
+  --selection-bg: #e8f0fe;
+
+  /* Editor Specific */
+  --editor-bg: #ffffff;
+  --editor-text: #1a1a1a;
+  --editor-line-height: 1.65;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+/* ============================================
+   THEME: Soft Dark
+   Deep slate backgrounds, comfortable for extended use
+   ============================================ */
+.theme-soft-dark {
+  /* Backgrounds - Deep slate tones */
+  --bg-primary: #1e2125;
+  --bg-secondary: #282c34;
+  --bg-tertiary: #2f343d;
+  --bg-hover: #383e48;
+
+  /* Text - Soft, not harsh white */
+  --text-primary: #d4d4d8;
+  --text-secondary: #a1a1aa;
+  --text-muted: #71717a;
+
+  /* Borders - Subtle */
+  --border-color: #3f4451;
+  --border-color-subtle: #2f343d;
+
+  /* Accents - Muted, no neon */
+  --accent-color: #7c9fc9;
+  --accent-light: #2d3748;
+  --accent-dark: #5b7ea8;
+
+  /* Status Colors */
+  --success-color: #6ba583;
+  --warning-color: #d4a574;
+  --error-color: #d97a7a;
+
+  /* Interactive States */
+  --focus-ring: #7c9fc9;
+  --selection-bg: #2d3748;
+
+  /* Editor Specific */
+  --editor-bg: #1e2125;
+  --editor-text: #d4d4d8;
+  --editor-line-height: 1.65;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+}
+
+/* ============================================
+   THEME: Calm Light
+   Off-white, warm tones, gentle on the eyes
+   ============================================ */
+.theme-calm-light {
+  /* Backgrounds - Off-white, warm tones */
+  --bg-primary: #fafaf9;
+  --bg-secondary: #f5f5f4;
+  --bg-tertiary: #e7e5e4;
+  --bg-hover: #f0efee;
+
+  /* Text - Comfortable contrast */
+  --text-primary: #292524;
+  --text-secondary: #57534e;
+  --text-muted: #a8a29e;
+
+  /* Borders - Gentle */
+  --border-color: #e7e5e4;
+  --border-color-subtle: #f0efee;
+
+  /* Accents - Earthy, calm */
+  --accent-color: #6b8a7a;
+  --accent-light: #e8f0ec;
+  --accent-dark: #556b61;
+
+  /* Status Colors */
+  --success-color: #6b8a7a;
+  --warning-color: #d4a574;
+  --error-color: #c87a7a;
+
+  /* Interactive States */
+  --focus-ring: #6b8a7a;
+  --selection-bg: #e8f0ec;
+
+  /* Editor Specific */
+  --editor-bg: #fafaf9;
+  --editor-text: #292524;
+  --editor-line-height: 1.65;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(41, 37, 36, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(41, 37, 36, 0.08);
+  --shadow-lg: 0 10px 15px -3px rgba(41, 37, 36, 0.1);
+}
