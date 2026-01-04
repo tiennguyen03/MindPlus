@@ -745,3 +745,57 @@ html, body, #root {
 .btn-secondary:hover {
   background: var(--bg-hover);
 }
+
+/* Theme Picker */
+.theme-picker {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+.theme-option {
+  display: flex;
+  align-items: center;
+  padding: var(--space-3);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.theme-option:hover {
+  background-color: var(--bg-hover);
+  border-color: var(--accent-color);
+}
+
+.theme-option input[type="radio"] {
+  margin: 0;
+  margin-right: var(--space-3);
+  accent-color: var(--accent-color);
+  cursor: pointer;
+}
+
+.theme-option input[type="radio"]:checked ~ .theme-info .theme-name {
+  color: var(--accent-color);
+  font-weight: 600;
+}
+
+.theme-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.theme-name {
+  font-size: var(--font-small);
+  font-weight: 500;
+  color: var(--text-primary);
+  transition: all var(--transition-fast);
+}
+
+.theme-description {
+  font-size: var(--font-tiny);
+  color: var(--text-muted);
+  margin-top: 2px;
+}

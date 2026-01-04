@@ -10,6 +10,7 @@ interface SettingsModalProps {
 export default function SettingsModal({ settings, onSave, onClose }: SettingsModalProps) {
   const [apiKey, setApiKey] = useState(settings.aiApiKey || '');
   const [showKey, setShowKey] = useState(false);
+  const [uiTheme, setUiTheme] = useState<Settings['uiTheme']>(settings.uiTheme);
 
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
@@ -20,7 +21,11 @@ export default function SettingsModal({ settings, onSave, onClose }: SettingsMod
   }, [onClose]);
 
   const handleSave = () => {
-    onSave({ ...settings, aiApiKey: apiKey.trim() || undefined });
+    onSave({
+      ...settings,
+      aiApiKey: apiKey.trim() || undefined,
+      uiTheme,
+    });
     onClose();
   };
 
@@ -72,6 +77,37 @@ export default function SettingsModal({ settings, onSave, onClose }: SettingsMod
           <div className="settings-section">
             <h3>Journal Location</h3>
             <p className="settings-value">{settings.journalPath || 'Not set'}</p>
+          </div>
+
+          <div className="settings-section">
+            <h3>Appearance</h3>
+            <p className="settings-description">
+              Choose a theme that's comfortable for your eyes during long journaling sessions.
+            </p>
+
+            <label className="settings-label">Theme</label>
+            <div className="theme-picker">
+              {[
+                { value: 'system' as const, label: 'System', description: 'Follow system preference' },
+                { value: 'default' as const, label: 'Default Light', description: 'Clean & bright' },
+                { value: 'calm-light' as const, label: 'Calm Light', description: 'Soft & warm' },
+                { value: 'soft-dark' as const, label: 'Soft Dark', description: 'Easy on the eyes' },
+              ].map(theme => (
+                <label key={theme.value} className="theme-option">
+                  <input
+                    type="radio"
+                    name="theme"
+                    value={theme.value}
+                    checked={uiTheme === theme.value}
+                    onChange={(e) => setUiTheme(e.target.value as Settings['uiTheme'])}
+                  />
+                  <div className="theme-info">
+                    <span className="theme-name">{theme.label}</span>
+                    <span className="theme-description">{theme.description}</span>
+                  </div>
+                </label>
+              ))}
+            </div>
           </div>
         </div>
 
