@@ -109,6 +109,29 @@ export default function SettingsModal({ settings, onSave, onClose }: SettingsMod
               ))}
             </div>
           </div>
+
+          <div className="settings-section">
+            <h3>Layout</h3>
+            <p className="settings-description">
+              Reset panel sizes to their default values if you need to restore the original layout.
+            </p>
+
+            <div className="reset-buttons">
+              <button
+                className="btn-secondary btn-small"
+                onClick={() => {
+                  const newSettings = {
+                    ...settings,
+                    sidebarWidth: 300,
+                    aiPanelWidth: 420
+                  };
+                  onSave(newSettings);
+                }}
+              >
+                Reset All Panel Sizes
+              </button>
+            </div>
+          </div>
         </div>
 
         <div className="modal-footer">
