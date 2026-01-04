@@ -7,6 +7,7 @@ import AIOutputPanel from './components/AIOutputPanel';
 import SettingsModal from './components/SettingsModal';
 import ResizablePanel from './components/ResizablePanel';
 import { useTheme } from './hooks/useTheme';
+import { debounce } from './utils/debounce';
 
 interface AIOutput {
   type: string;
@@ -142,6 +143,29 @@ export default function App() {
     setSettings(newSettings);
   };
 
+  // Debounced handlers for panel resize persistence
+  const handleSidebarResize = useCallback(
+    debounce((size: number) => {
+      if (settings) {
+        const newSettings = { ...settings, sidebarWidth: size };
+        window.journal.saveSettings(newSettings);
+        setSettings(newSettings);
+      }
+    }, 200),
+    [settings]
+  );
+
+  const handleAIPanelResize = useCallback(
+    debounce((size: number) => {
+      if (settings) {
+        const newSettings = { ...settings, aiPanelWidth: size };
+        window.journal.saveSettings(newSettings);
+        setSettings(newSettings);
+      }
+    }, 200),
+    [settings]
+  );
+
   // Show setup screen if no journal folder selected
   if (!settings?.journalPath) {
     return (
@@ -165,9 +189,11 @@ export default function App() {
       <ResizablePanel
         direction="horizontal"
         defaultSize={300}
+        persistedSize={settings.sidebarWidth}
         minSize={200}
         maxSize={600}
         className="sidebar-panel"
+        onResizeEnd={handleSidebarResize}
       >
         <Sidebar
           tree={tree}
@@ -207,9 +233,11 @@ export default function App() {
         <ResizablePanel
           direction="horizontal"
           defaultSize={420}
+          persistedSize={settings.aiPanelWidth}
           minSize={300}
           maxSize={720}
           className="ai-panel-right"
+          onResizeEnd={handleAIPanelResize}
         >
           <AIOutputPanel
             loading={aiLoading}

@@ -3,27 +3,38 @@ import React, { useRef, useEffect, useState, useCallback } from 'react';
 interface ResizablePanelProps {
   direction: 'horizontal' | 'vertical';
   defaultSize: number;
+  persistedSize?: number;
   minSize: number;
   maxSize: number;
   children: React.ReactNode;
   className?: string;
   onResize?: (size: number) => void;
+  onResizeEnd?: (size: number) => void;
 }
 
 export default function ResizablePanel({
   direction,
   defaultSize,
+  persistedSize,
   minSize,
   maxSize,
   children,
   className = '',
   onResize,
+  onResizeEnd,
 }: ResizablePanelProps) {
-  const [size, setSize] = useState(defaultSize);
+  const [size, setSize] = useState(persistedSize || defaultSize);
   const [isResizing, setIsResizing] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
   const startPosRef = useRef(0);
   const startSizeRef = useRef(0);
+
+  // Update size when persistedSize changes
+  useEffect(() => {
+    if (persistedSize !== undefined) {
+      setSize(persistedSize);
+    }
+  }, [persistedSize]);
 
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
@@ -45,6 +56,8 @@ export default function ResizablePanel({
 
     const handleMouseUp = () => {
       setIsResizing(false);
+      // Call onResizeEnd when mouse is released
+      onResizeEnd?.(size);
     };
 
     document.addEventListener('mousemove', handleMouseMove);
@@ -54,7 +67,7 @@ export default function ResizablePanel({
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [isResizing, direction, minSize, maxSize, onResize]);
+  }, [isResizing, direction, minSize, maxSize, onResize, onResizeEnd, size]);
 
   const style = direction === 'horizontal'
     ? { width: `${size}px` }
