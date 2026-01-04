@@ -112,13 +112,35 @@ export default function App() {
   };
 
   const handleNewEntry = async () => {
-    const today = new Date().toISOString().split('T')[0];
-    const entryPath = await window.journal.createEntry(today);
-    await refreshTree();
-    const entry = await window.journal.readEntry(entryPath);
-    setCurrentEntry(entry);
-    setSearchQuery('');
-    setSearchResults([]);
+    try {
+      const today = new Date().toISOString().split('T')[0];
+      const entryPath = await window.journal.createEntry(today);
+
+      // Refresh tree and index
+      await refreshTree();
+
+      // Read the entry
+      const entry = await window.journal.readEntry(entryPath);
+
+      if (entry) {
+        setCurrentEntry(entry);
+        setSearchQuery('');
+        setSearchResults([]);
+
+        // Update index for this new entry
+        try {
+          await window.journal.updateIndexItem(entryPath, 'entry');
+          const indexData = await window.journal.readIndex();
+          if (indexData) setIndex(indexData.items);
+        } catch (error) {
+          console.error('Error updating index:', error);
+        }
+      } else {
+        console.error('Failed to read newly created entry');
+      }
+    } catch (error) {
+      console.error('Error creating new entry:', error);
+    }
   };
 
   const handleSelectEntry = async (path: string) => {
