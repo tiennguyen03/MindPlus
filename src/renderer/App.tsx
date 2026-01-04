@@ -5,6 +5,7 @@ import Editor from './components/Editor';
 import EmptyState from './components/EmptyState';
 import AIOutputPanel from './components/AIOutputPanel';
 import SettingsModal from './components/SettingsModal';
+import ResizablePanel from './components/ResizablePanel';
 
 interface AIOutput {
   type: string;
@@ -155,21 +156,29 @@ export default function App() {
           onClose={() => setShowSettings(false)}
         />
       )}
-      <Sidebar
-        tree={tree}
-        searchQuery={searchQuery}
-        searchResults={searchResults}
-        selectedPath={currentEntry?.path || null}
-        aiEnabled={settings.aiEnabled}
-        onSearch={handleSearch}
-        onSelectEntry={handleSelectEntry}
-        onNewEntry={handleNewEntry}
-        onSelectFolder={handleSelectFolder}
-        onToggleAI={handleToggleAI}
-        onAIAction={handleAIAction}
-        onOpenSettings={() => setShowSettings(true)}
-        hasApiKey={!!settings.aiApiKey}
-      />
+      <ResizablePanel
+        direction="horizontal"
+        defaultSize={300}
+        minSize={200}
+        maxSize={600}
+        className="sidebar-panel"
+      >
+        <Sidebar
+          tree={tree}
+          searchQuery={searchQuery}
+          searchResults={searchResults}
+          selectedPath={currentEntry?.path || null}
+          aiEnabled={settings.aiEnabled}
+          onSearch={handleSearch}
+          onSelectEntry={handleSelectEntry}
+          onNewEntry={handleNewEntry}
+          onSelectFolder={handleSelectFolder}
+          onToggleAI={handleToggleAI}
+          onAIAction={handleAIAction}
+          onOpenSettings={() => setShowSettings(true)}
+          hasApiKey={!!settings.aiApiKey}
+        />
+      </ResizablePanel>
       <main className="main-content">
         {currentEntry ? (
           <>
@@ -178,13 +187,21 @@ export default function App() {
               onSave={handleSaveEntry}
             />
             {(aiLoading || aiOutput) && (
-              <AIOutputPanel
-                loading={aiLoading}
-                output={aiOutput}
-                onClose={handleCloseAIOutput}
-                onSave={handleSaveAIOutput}
-                onRefresh={handleRefreshAI}
-              />
+              <ResizablePanel
+                direction="vertical"
+                defaultSize={300}
+                minSize={150}
+                maxSize={600}
+                className="ai-panel"
+              >
+                <AIOutputPanel
+                  loading={aiLoading}
+                  output={aiOutput}
+                  onClose={handleCloseAIOutput}
+                  onSave={handleSaveAIOutput}
+                  onRefresh={handleRefreshAI}
+                />
+              </ResizablePanel>
             )}
           </>
         ) : (
