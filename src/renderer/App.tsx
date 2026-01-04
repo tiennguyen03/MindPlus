@@ -6,6 +6,7 @@ import EmptyState from './components/EmptyState';
 import AIOutputPanel from './components/AIOutputPanel';
 import SettingsModal from './components/SettingsModal';
 import ResizablePanel from './components/ResizablePanel';
+import { useTheme } from './hooks/useTheme';
 
 interface AIOutput {
   type: string;
@@ -30,6 +31,9 @@ export default function App() {
   useEffect(() => {
     window.journal.getSettings().then(setSettings);
   }, []);
+
+  // Apply theme when settings load or change
+  useTheme(settings?.uiTheme || 'system');
 
   // Load tree when journal path changes
   useEffect(() => {
