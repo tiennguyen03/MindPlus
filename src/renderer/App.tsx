@@ -5,6 +5,7 @@ import Editor from './components/Editor';
 import EmptyState from './components/EmptyState';
 import AIOutputPanel from './components/AIOutputPanel';
 import SettingsModal from './components/SettingsModal';
+import QuickSwitcher from './components/QuickSwitcher';
 import ResizablePanel from './components/ResizablePanel';
 import { useTheme } from './hooks/useTheme';
 import { debounce } from './utils/debounce';
@@ -15,6 +16,19 @@ interface AIOutput {
   content: string;
   confidence?: string;
   quotes?: string[];
+}
+
+interface IndexItem {
+  id: string;
+  type: 'entry' | 'ai';
+  subtype?: 'daily' | 'weekly' | 'highlights' | 'loops' | 'questions';
+  relativePath: string;
+  displayTitle: string;
+  date: string;
+  updatedAt: string;
+  wordCount?: number;
+  excerpt?: string;
+  searchableText?: string;
 }
 
 export default function App() {
@@ -28,6 +42,8 @@ export default function App() {
   const [lastAIAction, setLastAIAction] = useState<string | null>(null);
   const [showSettings, setShowSettings] = useState(false);
   const [indexing, setIndexing] = useState(false);
+  const [showQuickSwitcher, setShowQuickSwitcher] = useState(false);
+  const [index, setIndex] = useState<IndexItem[]>([]);
 
   // Load settings on mount
   useEffect(() => {
@@ -36,6 +52,20 @@ export default function App() {
 
   // Apply theme when settings load or change
   useTheme(settings?.uiTheme || 'system');
+
+  // Global keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Cmd/Ctrl+K for Quick Switcher
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setShowQuickSwitcher(prev => !prev);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   // Load tree when journal path changes
   useEffect(() => {
@@ -49,11 +79,16 @@ export default function App() {
   const buildOrReadIndex = useCallback(async () => {
     try {
       setIndexing(true);
-      const existingIndex = await window.journal.readIndex();
+      let indexData = await window.journal.readIndex();
 
-      if (!existingIndex) {
+      if (!indexData) {
         // Build index if it doesn't exist
-        await window.journal.buildIndex();
+        indexData = await window.journal.buildIndex();
+      }
+
+      // Load index items into state
+      if (indexData) {
+        setIndex(indexData.items);
       }
     } catch (error) {
       console.error('Error initializing index:', error);
@@ -101,6 +136,9 @@ export default function App() {
       // Update index for this entry
       try {
         await window.journal.updateIndexItem(currentEntry.path, 'entry');
+        // Reload index to get updated data
+        const indexData = await window.journal.readIndex();
+        if (indexData) setIndex(indexData.items);
       } catch (error) {
         console.error('Error updating index:', error);
       }
@@ -189,6 +227,9 @@ export default function App() {
           }
 
           await window.journal.updateIndexItem(relativePath, 'ai', subtype);
+          // Reload index to get updated data
+          const indexData = await window.journal.readIndex();
+          if (indexData) setIndex(indexData.items);
         }
       } catch (error) {
         console.error('Error updating index:', error);
@@ -206,6 +247,23 @@ export default function App() {
   const handleSaveSettings = async (newSettings: Settings) => {
     await window.journal.saveSettings(newSettings);
     setSettings(newSettings);
+  };
+
+  // Handle Quick Switcher item selection
+  const handleQuickSwitcherSelect = async (item: IndexItem) => {
+    if (item.type === 'entry') {
+      // Open entry
+      const entry = await window.journal.readEntry(item.relativePath);
+      if (entry) {
+        setCurrentEntry(entry);
+        setSearchQuery('');
+        setSearchResults([]);
+      }
+    } else if (item.type === 'ai') {
+      // For AI outputs, we could potentially show them in the AI panel
+      // For now, just log it - can be enhanced later
+      console.log('Selected AI output:', item);
+    }
   };
 
   // Debounced handlers for panel resize persistence
@@ -249,6 +307,14 @@ export default function App() {
           onClose={() => setShowSettings(false)}
         />
       )}
+
+      {/* Quick Switcher (Cmd/Ctrl+K) */}
+      <QuickSwitcher
+        isOpen={showQuickSwitcher}
+        onClose={() => setShowQuickSwitcher(false)}
+        onSelect={handleQuickSwitcherSelect}
+        index={index}
+      />
 
       {/* Sidebar - Left Panel */}
       <ResizablePanel
