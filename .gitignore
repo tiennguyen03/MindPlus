@@ -1,7 +1,89 @@
+# Dependencies
 node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Build outputs
 dist/
-.vite/
-*.log
+dist-electron/
+out/
+build/
+*.app
+*.dmg
+*.exe
+*.zip
+release/
+
+# Compiled TypeScript
+*.js.map
+*.d.ts.map
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+
+# OS files
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
-.claude/
+desktop.ini
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+.env.production
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+pnpm-debug.log*
+
+# User data (IMPORTANT - don't commit user journals!)
+*.journal/
+journal-data/
+test-journal/
+example-journal/
+
+# User settings (contains API keys and personal data)
+**/Application Support/journal-mvp/
+settings.json
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+.parcel-cache/
+
+# TypeScript
+*.tsbuildinfo
+.tsbuildinfo
+
+# Testing
+coverage/
+.nyc_output/
+*.lcov
+.jest/
+
+# Electron
+electron-builder.yml
+electron-builder-*.yml
+
+# Misc
+.eslintcache
+.stylelintcache

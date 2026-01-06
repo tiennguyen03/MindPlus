@@ -1,6 +1,8 @@
 import { app, BrowserWindow } from 'electron';
 import path from 'path';
 import { registerIpcHandlers } from './ipc';
+import { registerTaskHandlers } from './taskHandlers';
+import { taskManager } from './taskManager';
 
 const isDev = process.env.NODE_ENV !== 'production';
 
@@ -29,10 +31,16 @@ function createWindow() {
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
+
+  // Set main window for task manager
+  taskManager.setMainWindow(mainWindow);
+
+  return mainWindow;
 }
 
 app.whenReady().then(() => {
   registerIpcHandlers();
+  registerTaskHandlers();
   createWindow();
 
   app.on('activate', () => {

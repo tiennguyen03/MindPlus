@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Settings } from '../../shared/types';
+import DataTransparency from './DataTransparency';
+import SecuritySettings from './SecuritySettings';
+import EditorPreferences from './EditorPreferences';
+import AIPreferences from './AIPreferences';
+import FeatureFlagsSettings from './FeatureFlagsSettings';
+import UsageStatsDisplay from './UsageStatsDisplay';
 
 interface SettingsModalProps {
   settings: Settings;
@@ -131,6 +137,30 @@ export default function SettingsModal({ settings, onSave, onClose }: SettingsMod
                 Reset All Panel Sizes
               </button>
             </div>
+          </div>
+
+          <div className="settings-section">
+            <SecuritySettings settings={settings} onSave={onSave} />
+          </div>
+
+          <div className="settings-section">
+            <EditorPreferences settings={settings} onSave={onSave} />
+          </div>
+
+          <div className="settings-section">
+            <AIPreferences settings={settings} onSave={onSave} />
+          </div>
+
+          <div className="settings-section">
+            <FeatureFlagsSettings settings={settings} onSave={onSave} />
+          </div>
+
+          <div className="settings-section">
+            <UsageStatsDisplay settings={settings} />
+          </div>
+
+          <div className="settings-section">
+            <DataTransparency />
           </div>
         </div>
 

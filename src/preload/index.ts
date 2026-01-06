@@ -16,6 +16,16 @@ const IPC = {
   READ_INDEX: 'read-index',
   UPDATE_INDEX_ITEM: 'update-index-item',
   REMOVE_INDEX_ITEM: 'remove-index-item',
+  ASK_QUESTION: 'ask-question',
+  GENERATE_MONTHLY_SUMMARY: 'generate-monthly-summary',
+  GET_MONTHLY_INSIGHTS: 'get-monthly-insights',
+  GET_DATA_STATS: 'get-data-stats',
+  EXPORT_JOURNAL: 'export-journal',
+  DETECT_PATTERNS: 'detect-patterns',
+  // Security
+  VERIFY_PASSCODE: 'verify-passcode',
+  SET_PASSCODE: 'set-passcode',
+  CHECK_LOCK_STATUS: 'check-lock-status',
 } as const;
 
 // Types for the API
@@ -108,8 +118,58 @@ const api = {
 
   removeIndexItem: (relativePath: string): Promise<void> =>
     ipcRenderer.invoke(IPC.REMOVE_INDEX_ITEM, relativePath),
+
+  askQuestion: (question: string, startDate?: string, endDate?: string): Promise<AIOutput> =>
+    ipcRenderer.invoke(IPC.ASK_QUESTION, question, startDate, endDate),
+
+  generateMonthlySummary: (month: string): Promise<AIOutput> =>
+    ipcRenderer.invoke(IPC.GENERATE_MONTHLY_SUMMARY, month),
+
+  getMonthlyInsights: (month: string): Promise<any> =>
+    ipcRenderer.invoke(IPC.GET_MONTHLY_INSIGHTS, month),
+
+  getDataStats: (): Promise<any> =>
+    ipcRenderer.invoke(IPC.GET_DATA_STATS),
+
+  exportJournal: (): Promise<{ success: boolean; message: string } | null> =>
+    ipcRenderer.invoke(IPC.EXPORT_JOURNAL),
+
+  detectPatterns: (days?: number): Promise<any> =>
+    ipcRenderer.invoke(IPC.DETECT_PATTERNS, days),
+
+  // Security
+  verifyPasscode: (passcode: string): Promise<{ valid: boolean; error?: string }> =>
+    ipcRenderer.invoke(IPC.VERIFY_PASSCODE, passcode),
+
+  setPasscode: (passcode: string): Promise<{ success: boolean }> =>
+    ipcRenderer.invoke(IPC.SET_PASSCODE, passcode),
+
+  checkLockStatus: (): Promise<{ isLockEnabled: boolean; hasPasscode: boolean; autoLockTimeout: number }> =>
+    ipcRenderer.invoke(IPC.CHECK_LOCK_STATUS),
+
+  // Background Tasks
+  getTasks: (): Promise<any[]> =>
+    ipcRenderer.invoke('task:get-all'),
+
+  startTask: (type: string, params?: any): Promise<{ taskId: string }> =>
+    ipcRenderer.invoke('task:start', type, params),
+
+  cancelTask: (taskId: string): Promise<{ success: boolean }> =>
+    ipcRenderer.invoke('task:cancel', taskId),
 };
 
 contextBridge.exposeInMainWorld('journal', api);
+
+// Expose electron for event listeners
+contextBridge.exposeInMainWorld('electron', {
+  ipcRenderer: {
+    on: (channel: string, func: (...args: any[]) => void) => {
+      ipcRenderer.on(channel, func);
+    },
+    removeListener: (channel: string, func: (...args: any[]) => void) => {
+      ipcRenderer.removeListener(channel, func);
+    },
+  },
+});
 
 export type JournalAPI = typeof api;

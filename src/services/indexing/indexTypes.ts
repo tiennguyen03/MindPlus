@@ -13,6 +13,7 @@ export interface IndexItem {
   wordCount?: number;
   excerpt?: string; // First ~200 chars
   searchableText?: string; // Limited searchable content
+  sensitive?: boolean; // Mark entry as sensitive
 }
 
 export interface JournalIndex {

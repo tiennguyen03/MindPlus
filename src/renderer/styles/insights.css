@@ -1,0 +1,338 @@
+/* Insights Dashboard Styles */
+
+.insights-dashboard {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-primary);
+}
+
+.insights-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-5) var(--space-6);
+  border-bottom: 1px solid var(--border-color);
+  gap: var(--space-4);
+}
+
+.insights-header h1 {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.insights-tabs {
+  display: flex;
+  gap: var(--space-2);
+  flex: 1;
+  max-width: 400px;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+  font-size: var(--font-small);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.tab-btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--accent-color);
+}
+
+.tab-btn.active {
+  background: var(--accent-color);
+  border-color: var(--accent-color);
+  color: white;
+}
+
+.month-selector {
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: var(--font-small);
+  cursor: pointer;
+  outline: none;
+  transition: border-color var(--transition-fast);
+}
+
+.month-selector:focus {
+  border-color: var(--accent-color);
+}
+
+.insights-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-6);
+}
+
+.insights-loading,
+.insights-error,
+.insights-empty {
+  padding: var(--space-8);
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.insights-error button {
+  margin-top: var(--space-4);
+}
+
+.insights-empty h2 {
+  font-size: 18px;
+  color: var(--text-primary);
+  margin-bottom: var(--space-2);
+}
+
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.stat-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: var(--space-4);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  transition: all var(--transition-fast);
+}
+
+.stat-card:hover {
+  border-color: var(--accent-color);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.stat-icon {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.stat-content {
+  flex: 1;
+}
+
+.stat-label {
+  font-size: var(--font-tiny);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-1);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-value {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.2;
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.stat-trend {
+  font-size: var(--font-small);
+  font-weight: 400;
+}
+
+.stat-trend.trend-up {
+  color: #10b981;
+}
+
+.stat-trend.trend-down {
+  color: #ef4444;
+}
+
+.stat-trend.trend-flat {
+  color: var(--text-muted);
+}
+
+.stat-sublabel {
+  font-size: var(--font-tiny);
+  color: var(--text-muted);
+  margin-top: var(--space-1);
+}
+
+/* Insights Sections */
+.insights-section {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: var(--space-5);
+  margin-bottom: var(--space-4);
+}
+
+.insights-section:last-child {
+  margin-bottom: 0;
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-4) 0;
+}
+
+/* Theme Frequency */
+.theme-frequency {
+}
+
+.theme-frequency-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-4) 0;
+}
+
+.theme-frequency-empty {
+  padding: var(--space-6);
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.theme-frequency-hint {
+  font-size: var(--font-tiny);
+  margin-top: var(--space-2);
+}
+
+.theme-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.theme-item {
+  padding: var(--space-3);
+  border-radius: 6px;
+  transition: background var(--transition-fast);
+}
+
+.theme-item-clickable {
+  cursor: pointer;
+}
+
+.theme-item-clickable:hover {
+  background: var(--bg-hover);
+}
+
+.theme-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: var(--space-2);
+}
+
+.theme-name {
+  font-size: var(--font-small);
+  font-weight: 500;
+  color: var(--text-primary);
+  text-transform: capitalize;
+}
+
+.theme-count {
+  font-size: var(--font-tiny);
+  color: var(--text-secondary);
+}
+
+.theme-trend {
+  font-size: var(--font-tiny);
+}
+
+.theme-trend.trend-up {
+  color: #10b981;
+}
+
+.theme-trend.trend-down {
+  color: #ef4444;
+}
+
+.theme-bar-container {
+  height: 6px;
+  background: var(--bg-primary);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.theme-bar {
+  height: 100%;
+  background: var(--accent-color);
+  border-radius: 3px;
+  transition: width var(--transition-normal);
+}
+
+/* Top Entries */
+.top-entries-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.top-entry-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border-radius: 6px;
+  background: var(--bg-primary);
+  font-size: var(--font-small);
+}
+
+.entry-date {
+  color: var(--text-muted);
+  font-size: var(--font-tiny);
+  min-width: 80px;
+}
+
+.entry-title {
+  flex: 1;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.entry-words {
+  color: var(--text-secondary);
+  font-size: var(--font-tiny);
+}
+
+/* AI Coverage Details */
+.ai-coverage-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--space-3);
+}
+
+.coverage-item {
+  padding: var(--space-3);
+  background: var(--bg-primary);
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.coverage-label {
+  font-size: var(--font-tiny);
+  color: var(--text-secondary);
+}
+
+.coverage-value {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary);
+}

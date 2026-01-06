@@ -42,11 +42,31 @@ interface JournalAPI {
   readIndex: () => Promise<JournalIndex | null>;
   updateIndexItem: (relativePath: string, type: 'entry' | 'ai', subtype?: 'daily' | 'weekly' | 'highlights' | 'loops' | 'questions') => Promise<void>;
   removeIndexItem: (relativePath: string) => Promise<void>;
+  askQuestion: (question: string, startDate?: string, endDate?: string) => Promise<AIOutput>;
+  generateMonthlySummary: (month: string) => Promise<AIOutput>;
+  getMonthlyInsights: (month: string) => Promise<any>;
+  getDataStats: () => Promise<any>;
+  exportJournal: () => Promise<{ success: boolean; message: string } | null>;
+  detectPatterns: (days?: number) => Promise<any>;
+  // Security
+  verifyPasscode: (passcode: string) => Promise<{ valid: boolean; error?: string }>;
+  setPasscode: (passcode: string) => Promise<{ success: boolean }>;
+  checkLockStatus: () => Promise<{ isLockEnabled: boolean; hasPasscode: boolean; autoLockTimeout: number }>;
+  // Background Tasks
+  getTasks: () => Promise<any[]>;
+  startTask: (type: string, params?: any) => Promise<{ taskId: string }>;
+  cancelTask: (taskId: string) => Promise<{ success: boolean }>;
 }
 
 declare global {
   interface Window {
     journal: JournalAPI;
+    electron: {
+      ipcRenderer: {
+        on: (channel: string, func: (...args: any[]) => void) => void;
+        removeListener: (channel: string, func: (...args: any[]) => void) => void;
+      };
+    };
   }
 }
 

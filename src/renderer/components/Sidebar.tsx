@@ -105,6 +105,7 @@ export default function Sidebar({
   selectedPath,
   aiEnabled,
   index,
+  currentView = 'journal',
   onSearch,
   onSelectEntry,
   onSelectIndexItem,
@@ -113,6 +114,7 @@ export default function Sidebar({
   onToggleAI,
   onAIAction,
   onOpenSettings,
+  onViewChange,
   hasApiKey,
 }: SidebarProps) {
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set());
@@ -147,16 +149,38 @@ export default function Sidebar({
   return (
     <aside className="sidebar">
       <div className="sidebar-header">
-        <h1>Journal</h1>
+        <h1>MindPlus</h1>
         <div className="sidebar-actions">
-          <button className="primary" onClick={onNewEntry} title="Open or create today's entry">
-            Today
-          </button>
           <button onClick={onOpenSettings} title="Settings">
             ⚙
           </button>
         </div>
       </div>
+
+      {/* View Switcher */}
+      <div className="view-switcher">
+        <button
+          className={`view-btn ${currentView === 'journal' ? 'active' : ''}`}
+          onClick={() => onViewChange?.('journal')}
+        >
+          📝 Journal
+        </button>
+        <button
+          className={`view-btn ${currentView === 'insights' ? 'active' : ''}`}
+          onClick={() => onViewChange?.('insights')}
+        >
+          📊 Insights
+        </button>
+      </div>
+
+      {/* Today Button - only show in journal view */}
+      {currentView === 'journal' && (
+        <div className="sidebar-quick-actions">
+          <button className="primary full-width" onClick={onNewEntry} title="Open or create today's entry">
+            Today
+          </button>
+        </div>
+      )}
 
       <div className="search-container">
         <input
@@ -240,6 +264,20 @@ export default function Sidebar({
               </div>
             ) : (
               <>
+                <button
+                  className="ai-tool-btn"
+                  onClick={() => onAIAction('ask-question')}
+                >
+                  <span className="ai-icon">❓</span>
+                  Ask Your Journal
+                </button>
+                <button
+                  className="ai-tool-btn"
+                  onClick={() => onAIAction('monthly-summary')}
+                >
+                  <span className="ai-icon">📆</span>
+                  Monthly Summary
+                </button>
                 <button
                   className="ai-tool-btn"
                   onClick={() => onAIAction('daily-review')}

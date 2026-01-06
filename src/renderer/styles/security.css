@@ -1,0 +1,141 @@
+/* Security Settings Styles */
+
+.security-settings {
+  padding: var(--space-5) 0;
+}
+
+.security-settings h3 {
+  margin: 0 0 var(--space-2) 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.security-settings h4 {
+  margin: 0 0 var(--space-2) 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.security-option {
+  margin: var(--space-4) 0;
+}
+
+.security-option-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-2);
+}
+
+.security-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-small);
+  font-weight: 500;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.security-label input[type="checkbox"] {
+  cursor: pointer;
+}
+
+.security-status {
+  font-size: var(--font-tiny);
+  color: var(--accent-color);
+  font-weight: 600;
+  padding: 2px 8px;
+  background: rgba(26, 115, 232, 0.1);
+  border-radius: 4px;
+}
+
+.security-hint {
+  margin: var(--space-2) 0 0 0;
+  font-size: var(--font-tiny);
+  color: var(--text-tertiary);
+  font-style: italic;
+}
+
+/* Passcode Setup */
+
+.passcode-setup {
+  margin: var(--space-4) 0;
+  padding: var(--space-4);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  border-left: 4px solid var(--accent-color);
+}
+
+.setup-hint {
+  margin: 0 0 var(--space-4) 0;
+  font-size: var(--font-small);
+  color: var(--text-secondary);
+  line-height: var(--line-height-relaxed);
+}
+
+.passcode-fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.passcode-input {
+  padding: var(--space-3);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: var(--font-small);
+  font-family: var(--font-mono);
+  letter-spacing: 0.1em;
+  transition: border-color var(--transition-fast);
+}
+
+.passcode-input:focus {
+  outline: none;
+  border-color: var(--accent-color);
+}
+
+.passcode-input::placeholder {
+  letter-spacing: normal;
+  font-family: var(--font-sans);
+}
+
+.passcode-error {
+  padding: var(--space-2) var(--space-3);
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 4px;
+  color: #ef4444;
+  font-size: var(--font-tiny);
+}
+
+.passcode-actions {
+  display: flex;
+  gap: var(--space-2);
+  justify-content: flex-end;
+}
+
+/* Auto-Lock Select */
+
+.auto-lock-select {
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font-size: var(--font-small);
+  cursor: pointer;
+  transition: border-color var(--transition-fast);
+  min-width: 200px;
+}
+
+.auto-lock-select:focus {
+  outline: none;
+  border-color: var(--accent-color);
+}

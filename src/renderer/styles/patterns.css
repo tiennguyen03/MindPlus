@@ -1,0 +1,223 @@
+/* Pattern Detection Styles */
+
+.pattern-detection {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  padding: var(--space-5);
+}
+
+.pattern-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.pattern-header h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.pattern-controls {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.pattern-controls label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-small);
+  color: var(--text-secondary);
+}
+
+.pattern-controls select {
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: var(--font-small);
+  cursor: pointer;
+}
+
+.pattern-meta {
+  font-size: var(--font-small);
+  color: var(--text-tertiary);
+  margin-bottom: var(--space-5);
+  font-style: italic;
+}
+
+.pattern-loading,
+.pattern-empty {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  color: var(--text-secondary);
+  font-size: var(--font-small);
+}
+
+/* Pattern Sections */
+
+.pattern-section {
+  margin-bottom: var(--space-6);
+}
+
+.pattern-section h3 {
+  margin: 0 0 var(--space-2) 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.pattern-description {
+  margin: 0 0 var(--space-4) 0;
+  font-size: var(--font-small);
+  color: var(--text-secondary);
+  line-height: var(--line-height-relaxed);
+}
+
+.pattern-empty-section {
+  padding: var(--space-5);
+  background: var(--bg-secondary);
+  border: 1px dashed var(--border-color);
+  border-radius: 8px;
+  text-align: center;
+  color: var(--text-tertiary);
+  font-size: var(--font-small);
+}
+
+/* Theme Cards */
+
+.theme-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.theme-card {
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--bg-secondary);
+  overflow: hidden;
+  transition: all var(--transition-normal);
+}
+
+.theme-card:hover {
+  border-color: var(--accent-color);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.theme-card-header {
+  padding: var(--space-4);
+  cursor: pointer;
+  user-select: none;
+}
+
+.theme-card-title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-2);
+}
+
+.theme-toggle {
+  color: var(--text-tertiary);
+  font-size: 12px;
+  min-width: 12px;
+}
+
+.theme-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-transform: capitalize;
+}
+
+.theme-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  background: var(--accent-color);
+  color: white;
+  font-size: var(--font-tiny);
+  font-weight: 600;
+  border-radius: 12px;
+}
+
+.theme-card-meta {
+  display: flex;
+  gap: var(--space-4);
+  font-size: var(--font-small);
+  color: var(--text-secondary);
+  padding-left: 24px;
+}
+
+.theme-trend {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.theme-dates {
+  color: var(--text-tertiary);
+}
+
+.theme-card-content {
+  padding: 0 var(--space-4) var(--space-4);
+  border-top: 1px solid var(--border-color);
+  padding-top: var(--space-3);
+}
+
+.theme-card-content h4 {
+  margin: 0 0 var(--space-3) 0;
+  font-size: var(--font-small);
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Evidence Items */
+
+.theme-evidence {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.evidence-item {
+  padding: var(--space-3);
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.evidence-item:hover {
+  border-color: var(--accent-color);
+  background: var(--bg-hover);
+}
+
+.evidence-date {
+  font-size: var(--font-tiny);
+  color: var(--accent-color);
+  font-weight: 600;
+  margin-bottom: var(--space-1);
+}
+
+.evidence-quote {
+  font-size: var(--font-small);
+  color: var(--text-secondary);
+  line-height: var(--line-height-relaxed);
+  font-style: italic;
+}

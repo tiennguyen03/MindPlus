@@ -6,7 +6,13 @@ import EmptyState from './components/EmptyState';
 import AIOutputPanel from './components/AIOutputPanel';
 import SettingsModal from './components/SettingsModal';
 import QuickSwitcher from './components/QuickSwitcher';
+import AskYourJournal from './components/AskYourJournal';
+import MonthlyReview from './components/MonthlyReview';
+import InsightsDashboard from './components/InsightsDashboard';
 import ResizablePanel from './components/ResizablePanel';
+import LockScreen from './components/LockScreen';
+import SensitiveEntryModal from './components/SensitiveEntryModal';
+import TaskIndicator from './components/TaskIndicator';
 import { useTheme } from './hooks/useTheme';
 import { debounce } from './utils/debounce';
 
@@ -29,6 +35,19 @@ interface IndexItem {
   wordCount?: number;
   excerpt?: string;
   searchableText?: string;
+  sensitive?: boolean;
+}
+
+/**
+ * Parse frontmatter to check if entry is sensitive
+ */
+function isSensitiveEntry(content: string): boolean {
+  const frontmatterMatch = content.match(/^---\n([\s\S]*?)\n---\n/);
+  if (!frontmatterMatch) return false;
+
+  const frontmatter = frontmatterMatch[1];
+  const sensitiveMatch = frontmatter.match(/sensitive:\s*true/i);
+  return !!sensitiveMatch;
 }
 
 export default function App() {
@@ -43,15 +62,74 @@ export default function App() {
   const [showSettings, setShowSettings] = useState(false);
   const [indexing, setIndexing] = useState(false);
   const [showQuickSwitcher, setShowQuickSwitcher] = useState(false);
+  const [showAskModal, setShowAskModal] = useState(false);
+  const [showMonthlyModal, setShowMonthlyModal] = useState(false);
   const [index, setIndex] = useState<IndexItem[]>([]);
+  const [currentView, setCurrentView] = useState<'journal' | 'insights'>('journal');
+  const [isLocked, setIsLocked] = useState(true);
+  const [lastActivityTime, setLastActivityTime] = useState(Date.now());
+  const [pendingSensitiveEntry, setPendingSensitiveEntry] = useState<JournalEntry | null>(null);
 
-  // Load settings on mount
+  // Load settings on mount and check lock status
   useEffect(() => {
-    window.journal.getSettings().then(setSettings);
+    const init = async () => {
+      const loadedSettings = await window.journal.getSettings();
+      setSettings(loadedSettings);
+
+      // Check if app lock is enabled
+      if (loadedSettings.appLockEnabled && loadedSettings.appLockPasscode) {
+        setIsLocked(true);
+      } else {
+        setIsLocked(false);
+      }
+    };
+
+    init();
   }, []);
 
   // Apply theme when settings load or change
   useTheme(settings?.uiTheme || 'system');
+
+  // Auto-lock timer
+  useEffect(() => {
+    if (!settings?.appLockEnabled || !settings?.appLockPasscode || settings.autoLockTimeout === 0) {
+      return;
+    }
+
+    const checkAutoLock = () => {
+      const now = Date.now();
+      const timeoutMs = settings.autoLockTimeout * 60 * 1000; // Convert minutes to ms
+
+      if (now - lastActivityTime > timeoutMs && !isLocked) {
+        setIsLocked(true);
+      }
+    };
+
+    // Check every 30 seconds
+    const interval = setInterval(checkAutoLock, 30000);
+
+    return () => clearInterval(interval);
+  }, [settings, lastActivityTime, isLocked]);
+
+  // Track user activity
+  useEffect(() => {
+    if (isLocked) return;
+
+    const updateActivity = () => {
+      setLastActivityTime(Date.now());
+    };
+
+    // Track mouse movement and keyboard
+    window.addEventListener('mousemove', updateActivity);
+    window.addEventListener('keydown', updateActivity);
+    window.addEventListener('click', updateActivity);
+
+    return () => {
+      window.removeEventListener('mousemove', updateActivity);
+      window.removeEventListener('keydown', updateActivity);
+      window.removeEventListener('click', updateActivity);
+    };
+  }, [isLocked]);
 
   // Global keyboard shortcuts
   useEffect(() => {
@@ -145,9 +223,29 @@ export default function App() {
 
   const handleSelectEntry = async (path: string) => {
     const entry = await window.journal.readEntry(path);
+
+    // Check if entry is sensitive and app lock is enabled
+    if (entry && isSensitiveEntry(entry.content) && settings?.appLockEnabled && settings?.appLockPasscode) {
+      setPendingSensitiveEntry(entry);
+      return;
+    }
+
     setCurrentEntry(entry);
     setSearchQuery('');
     setSearchResults([]);
+  };
+
+  const handleUnlockSensitiveEntry = () => {
+    if (pendingSensitiveEntry) {
+      setCurrentEntry(pendingSensitiveEntry);
+      setPendingSensitiveEntry(null);
+      setSearchQuery('');
+      setSearchResults([]);
+    }
+  };
+
+  const handleCancelSensitiveEntry = () => {
+    setPendingSensitiveEntry(null);
   };
 
   const handleSaveEntry = async (content: string) => {
@@ -186,7 +284,21 @@ export default function App() {
   };
 
   const handleAIAction = async (action: string) => {
-    if (!settings?.aiEnabled || !currentEntry) return;
+    if (!settings?.aiEnabled) return;
+
+    // Handle modal-based actions
+    if (action === 'ask-question') {
+      setShowAskModal(true);
+      return;
+    }
+
+    if (action === 'monthly-summary') {
+      setShowMonthlyModal(true);
+      return;
+    }
+
+    // Handle entry-based AI actions (require current entry)
+    if (!currentEntry) return;
 
     setAILoading(true);
     setAIOutput(null);
@@ -271,6 +383,21 @@ export default function App() {
     setSettings(newSettings);
   };
 
+  // Handle Ask/Monthly results - display in AI panel
+  const handleAskResult = (output: AIOutput) => {
+    setAIOutput(output);
+    setLastAIAction('ask-question');
+    // Reload index to show new AI output
+    buildOrReadIndex();
+  };
+
+  const handleMonthlyResult = (output: AIOutput) => {
+    setAIOutput(output);
+    setLastAIAction('monthly-summary');
+    // Reload index to show new AI output
+    buildOrReadIndex();
+  };
+
   // Handle Quick Switcher item selection
   const handleQuickSwitcherSelect = async (item: IndexItem) => {
     if (item.type === 'entry') {
@@ -311,6 +438,16 @@ export default function App() {
     [settings]
   );
 
+  const handleUnlock = () => {
+    setIsLocked(false);
+    setLastActivityTime(Date.now());
+  };
+
+  // Show lock screen if app is locked
+  if (isLocked && settings?.appLockEnabled && settings?.appLockPasscode) {
+    return <LockScreen onUnlock={handleUnlock} />;
+  }
+
   // Show setup screen if no journal folder selected
   if (!settings?.journalPath) {
     return (
@@ -320,8 +457,14 @@ export default function App() {
     );
   }
 
+  // Generate app classes based on editor preferences
+  const appClasses = [
+    'app',
+    settings.editorPreferences.distractionFree ? 'distraction-free' : '',
+  ].filter(Boolean).join(' ');
+
   return (
-    <div className="app">
+    <div className={appClasses}>
       {showSettings && settings && (
         <SettingsModal
           settings={settings}
@@ -338,7 +481,35 @@ export default function App() {
         index={index}
       />
 
+      {/* Ask Your Journal Modal */}
+      {showAskModal && (
+        <AskYourJournal
+          onClose={() => setShowAskModal(false)}
+          onResult={handleAskResult}
+        />
+      )}
+
+      {/* Monthly Summary Modal */}
+      {showMonthlyModal && (
+        <MonthlyReview
+          onClose={() => setShowMonthlyModal(false)}
+          onResult={handleMonthlyResult}
+        />
+      )}
+
+      {/* Sensitive Entry Unlock Modal */}
+      {pendingSensitiveEntry && (
+        <SensitiveEntryModal
+          entryTitle={pendingSensitiveEntry.date}
+          onUnlock={handleUnlockSensitiveEntry}
+          onCancel={handleCancelSensitiveEntry}
+        />
+      )}
+
       {/* Sidebar - Left Panel */}
+      {/* Task Indicator */}
+      <TaskIndicator className="app-task-indicator" />
+
       <ResizablePanel
         direction="horizontal"
         defaultSize={300}
@@ -355,6 +526,7 @@ export default function App() {
           selectedPath={currentEntry?.path || null}
           aiEnabled={settings.aiEnabled}
           index={index}
+          currentView={currentView}
           onSearch={handleSearch}
           onSelectEntry={handleSelectEntry}
           onSelectIndexItem={handleQuickSwitcherSelect}
@@ -363,15 +535,30 @@ export default function App() {
           onToggleAI={handleToggleAI}
           onAIAction={handleAIAction}
           onOpenSettings={() => setShowSettings(true)}
+          onViewChange={setCurrentView}
           hasApiKey={!!settings.aiApiKey}
         />
       </ResizablePanel>
 
-      {/* Editor - Center Panel */}
+      {/* Main Content - Center Panel */}
       <main className="main-content">
-        {currentEntry ? (
+        {currentView === 'insights' ? (
+          <InsightsDashboard
+            onThemeClick={(theme) => {
+              // Switch to journal view and search for theme
+              setCurrentView('journal');
+              handleSearch(theme);
+            }}
+            onEntryClick={(relativePath) => {
+              // Switch to journal view and open the entry
+              setCurrentView('journal');
+              handleSelectEntry(relativePath);
+            }}
+          />
+        ) : currentEntry ? (
           <Editor
             entry={currentEntry}
+            preferences={settings.editorPreferences}
             onSave={handleSaveEntry}
           />
         ) : (

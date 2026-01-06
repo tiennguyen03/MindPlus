@@ -11,6 +11,7 @@ interface IndexItem {
   wordCount?: number;
   excerpt?: string;
   searchableText?: string;
+  sensitive?: boolean;
 }
 
 interface EnhancedSearchProps {
@@ -58,6 +59,11 @@ export default function EnhancedSearch({ query, index, onSelectItem }: EnhancedS
 
   // Generate snippet with highlighted matches
   const generateSnippet = (item: IndexItem, query: string): string => {
+    // Hide snippet for sensitive entries
+    if (item.sensitive) {
+      return '[Sensitive content - unlock to view]';
+    }
+
     const text = item.searchableText || item.excerpt || '';
     if (!text) return '';
 
@@ -155,11 +161,12 @@ export default function EnhancedSearch({ query, index, onSelectItem }: EnhancedS
           results.map(item => (
             <div
               key={item.id}
-              className="search-result-item"
+              className={`search-result-item ${item.sensitive ? 'is-sensitive' : ''}`}
               onClick={() => onSelectItem(item)}
             >
               <div className="search-result-header">
                 <span className="search-result-title">
+                  {item.sensitive && <span className="sensitive-indicator-icon">🔒 </span>}
                   {highlightText(item.displayTitle, query)}
                 </span>
                 <span className="search-result-type">{getTypeLabel(item)}</span>
@@ -172,7 +179,7 @@ export default function EnhancedSearch({ query, index, onSelectItem }: EnhancedS
               </div>
               {item.snippet && (
                 <div className="search-result-snippet">
-                  {highlightText(item.snippet, query)}
+                  {item.sensitive ? item.snippet : highlightText(item.snippet, query)}
                 </div>
               )}
             </div>

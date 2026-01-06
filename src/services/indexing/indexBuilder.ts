@@ -83,6 +83,26 @@ async function indexDirectory(
 }
 
 /**
+ * Parse frontmatter from markdown content
+ */
+function parseFrontmatter(content: string): { sensitive?: boolean; body: string } {
+  const frontmatterMatch = content.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
+
+  if (!frontmatterMatch) {
+    return { body: content };
+  }
+
+  const frontmatter = frontmatterMatch[1];
+  const body = frontmatterMatch[2];
+
+  // Parse sensitive flag
+  const sensitiveMatch = frontmatter.match(/sensitive:\s*(true|false)/i);
+  const sensitive = sensitiveMatch ? sensitiveMatch[1].toLowerCase() === 'true' : undefined;
+
+  return { sensitive, body };
+}
+
+/**
  * Index a single markdown file
  */
 async function indexFile(
@@ -93,6 +113,9 @@ async function indexFile(
   try {
     const content = await fs.readFile(filePath, 'utf-8');
     const stats = await fs.stat(filePath);
+
+    // Parse frontmatter
+    const { sensitive, body } = parseFrontmatter(content);
 
     // Extract relative path (remove up to 'entries' or 'ai')
     const parts = filePath.split(path.sep);
@@ -105,16 +128,16 @@ async function indexFile(
     const date = dateMatch ? dateMatch[1] : new Date(stats.mtime).toISOString().split('T')[0];
 
     // Generate display title
-    const displayTitle = generateDisplayTitle(fileName, content);
+    const displayTitle = generateDisplayTitle(fileName, body);
 
     // Calculate word count
-    const wordCount = countWords(content);
+    const wordCount = countWords(body);
 
     // Generate excerpt (first 200 chars, cleaned)
-    const excerpt = generateExcerpt(content);
+    const excerpt = generateExcerpt(body);
 
     // Generate searchable text (limit to prevent huge index)
-    const searchableText = content.slice(0, 1000).toLowerCase();
+    const searchableText = body.slice(0, 1000).toLowerCase();
 
     const item: IndexItem = {
       id: relativePath,
@@ -127,6 +150,7 @@ async function indexFile(
       wordCount,
       excerpt,
       searchableText,
+      sensitive,
     };
 
     return item;

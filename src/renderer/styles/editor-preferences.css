@@ -1,0 +1,332 @@
+/* Editor Preferences */
+
+.editor-preferences {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.editor-preferences h3 {
+  margin: 0 0 var(--space-2) 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.preference-option {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.preference-label {
+  font-size: var(--font-base);
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: var(--space-2);
+}
+
+.preference-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.preference-radio {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.preference-radio:hover {
+  background-color: var(--bg-hover);
+  border-color: var(--accent-color);
+}
+
+.preference-radio input[type="radio"] {
+  margin-top: 2px;
+  cursor: pointer;
+}
+
+.preference-radio input[type="radio"]:checked ~ .radio-label .radio-title {
+  color: var(--accent-color);
+  font-weight: 600;
+}
+
+.radio-label {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  flex: 1;
+}
+
+.radio-title {
+  font-size: var(--font-base);
+  font-weight: 500;
+  color: var(--text-primary);
+  transition: color var(--transition-fast);
+}
+
+.radio-description {
+  font-size: var(--font-small);
+  color: var(--text-secondary);
+}
+
+/* Checkbox Preference */
+.preference-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.preference-checkbox:hover {
+  background-color: var(--bg-hover);
+  border-color: var(--accent-color);
+}
+
+.preference-checkbox input[type="checkbox"] {
+  margin-top: 2px;
+  cursor: pointer;
+}
+
+.checkbox-label {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  flex: 1;
+}
+
+.checkbox-title {
+  font-size: var(--font-base);
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.checkbox-description {
+  font-size: var(--font-small);
+  color: var(--text-secondary);
+}
+
+.preference-checkbox input[type="checkbox"]:checked ~ .checkbox-label .checkbox-title {
+  color: var(--accent-color);
+  font-weight: 600;
+}
+
+/* Editor Font Variants */
+.editor-container.font-default textarea {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', sans-serif;
+}
+
+.editor-container.font-serif textarea {
+  font-family: 'Georgia', 'Times New Roman', serif;
+}
+
+.editor-container.font-mono textarea {
+  font-family: 'SF Mono', 'Monaco', 'Menlo', 'Consolas', 'Courier New', monospace;
+}
+
+/* Editor Font Sizes */
+.editor-container.size-small textarea {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.editor-container.size-medium textarea {
+  font-size: 16px;
+  line-height: 1.65;
+}
+
+.editor-container.size-large textarea {
+  font-size: 18px;
+  line-height: 1.7;
+}
+
+/* Editor Line Widths */
+.editor-container.width-narrow {
+  max-width: 65ch;
+  margin: 0 auto;
+}
+
+.editor-container.width-medium {
+  max-width: 80ch;
+  margin: 0 auto;
+}
+
+.editor-container.width-wide {
+  max-width: 100%;
+}
+
+/* Distraction-Free Mode */
+.app.distraction-free .sidebar-panel {
+  display: none;
+}
+
+.app.distraction-free .ai-panel-right {
+  display: none;
+}
+
+.app.distraction-free .main-content {
+  max-width: 100%;
+}
+
+.app.distraction-free .editor-header {
+  border-bottom: none;
+  padding: var(--space-4) var(--space-6);
+}
+
+.app.distraction-free .editor-container {
+  padding: var(--space-6);
+}
+
+/* Smooth transitions for distraction-free toggle */
+.sidebar-panel,
+.ai-panel-right {
+  transition: opacity var(--transition-normal), transform var(--transition-normal);
+}
+
+/* AI Preferences */
+.ai-preferences {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.ai-preferences h3 {
+  margin: 0 0 var(--space-2) 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.preference-hint {
+  font-size: var(--font-small);
+  color: var(--text-secondary);
+  margin: var(--space-1) 0 var(--space-2) 0;
+}
+
+.ai-preferences-note {
+  padding: var(--space-4);
+  background: var(--bg-secondary);
+  border-left: 3px solid var(--accent-color);
+  border-radius: 6px;
+  margin-top: var(--space-2);
+}
+
+.ai-preferences-note p {
+  margin: 0;
+  font-size: var(--font-small);
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.ai-preferences-note strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* Feature Flags */
+.feature-flags-settings {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.feature-flags-settings h3 {
+  margin: 0 0 var(--space-2) 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* Usage Stats */
+.usage-stats-display {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.usage-stats-display h3 {
+  margin: 0 0 var(--space-2) 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--space-4);
+  margin: var(--space-4) 0;
+}
+
+.stat-card {
+  padding: var(--space-4);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  text-align: center;
+  transition: all var(--transition-fast);
+}
+
+.stat-card:hover {
+  border-color: var(--accent-color);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.stat-value {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--accent-color);
+  margin-bottom: var(--space-2);
+}
+
+.stat-label {
+  font-size: var(--font-base);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-1);
+}
+
+.stat-description {
+  font-size: var(--font-small);
+  color: var(--text-secondary);
+}
+
+.stats-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+.timeline-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.timeline-label {
+  font-size: var(--font-base);
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.timeline-value {
+  font-size: var(--font-base);
+  font-weight: 600;
+  color: var(--text-primary);
+}
